@@ -270,6 +270,12 @@ MIT License Applies
 						for (var z = 0; z < series.blocks.length; z++) {
 							var size = DateUtils.daysBetween(series.blocks[z].start,
 									series.blocks[z].end) + 1;
+							var label;
+							if (series.blocks[z].label) {
+								label = series.blocks[z].label;
+							} else {
+								label = size;
+							}
 							var offset = DateUtils.daysBetween(start, series.blocks[z].start);
 							var block = jQuery("<div>", {
 								"class" : "ganttview-block",
@@ -280,19 +286,25 @@ MIT License Applies
 									"top" :((z*-27)) + "px"
 								}
 							});
-							addBlockData(block, data[i], series, z, series.blocks[z].id);
+							addBlockData(block, data[i], series, z, series.blocks[z].id, series.blocks[z].label);
 							if (data[i].series[j].color) {
 								block.css("background-color", data[i].series[j].color);
 							}
 							block.append(jQuery("<div>", {
 								"class" : "ganttview-block-text"
-							}).text(size));
+							}).text(label));
 							jQuery(rows[rowIdx]).append(block);
 						}
 						rowIdx = rowIdx + 1;
 					} else {
 						var size = DateUtils.daysBetween(series.start,
 								series.end) + 1;
+						var label;
+						if (series.label) {
+							label = series.label;
+						} else {
+							label = size;
+						}
 						var offset = DateUtils.daysBetween(start, series.start);
 						var block = jQuery("<div>", {
 							"class" : "ganttview-block",
@@ -303,13 +315,13 @@ MIT License Applies
 										+ "px"
 							}
 						});
-						addBlockData(block, data[i], series,0, null);
+						addBlockData(block, data[i], series,0, null, series.label);
 						if (data[i].series[j].color) {
 							block.css("background-color", data[i].series[j].color);
 						}
 						block.append(jQuery("<div>", {
 							"class" : "ganttview-block-text"
-						}).text(size));
+						}).text(label));
 						jQuery(rows[rowIdx]).append(block);
 						rowIdx = rowIdx + 1;
 					}
@@ -318,7 +330,7 @@ MIT License Applies
 			}
 		}
 
-		function addBlockData(block, data, series, blockIndex, blockId) {
+		function addBlockData(block, data, series, blockIndex, blockId, label) {
 			// This allows custom attributes to be added to the series data
 			// objects
 			// and makes them available to the 'data' argument of click, resize,
@@ -328,7 +340,8 @@ MIT License Applies
 				id : data.id,
 				name : data.name,
 				blockIndex : blockIndex,
-				blockId : blockId
+				blockId : blockId,
+				label : label
 			};
 			jQuery.extend(blockData, series);
 			block.data("block-data", blockData);
@@ -422,7 +435,10 @@ MIT License Applies
 			var numberOfDays = Math.round(width / cellWidth) - 1;
 			block.data("block-data").end = newStart.clone().addDays(
 					numberOfDays);
-			jQuery("div.ganttview-block-text", block).text(numberOfDays + 1);
+			if (block.data("block-data").label)
+				jQuery("div.ganttview-block-text", block).text(block.data("block-data").label);
+			else
+				jQuery("div.ganttview-block-text", block).text(numberOfDays + 1);
 
 			// Remove top and left properties to avoid incorrect block
 			// positioning,

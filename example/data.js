@@ -6,7 +6,8 @@ var ganttData = [ {
 		blocks : [ {
 			id : 1,
 			start : new Date(2010, 00, 01),
-			end : new Date(2010, 00, 03)
+			end : new Date(2010, 00, 03),
+			label : "Test Label"
 		}, {
 			id : 2,
 			start : new Date(2010, 01, 01),
