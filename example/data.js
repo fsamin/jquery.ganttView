@@ -19,15 +19,15 @@ var ganttData = [ {
 	}, {
 		name : "Actual",
 		blocks : [ {
-			id : 1,
+			id : 4,
 			start : new Date(2010, 00, 01),
 			end : new Date(2010, 00, 03)
 		}, {
-			id : 2,
+			id : 5,
 			start : new Date(2010, 01, 01),
 			end : new Date(2010, 01, 03)
 		}, {
-			id : 3,
+			id : 6,
 			start : new Date(2010, 01, 10),
 			end : new Date(2010, 01, 13)
 		} ],

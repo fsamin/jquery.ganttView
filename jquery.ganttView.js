@@ -280,7 +280,7 @@ MIT License Applies
 									"top" :((z*-27)) + "px"
 								}
 							});
-							addBlockData(block, data[i], series, z);
+							addBlockData(block, data[i], series, z, series.blocks[z].id);
 							if (data[i].series[j].color) {
 								block.css("background-color", data[i].series[j].color);
 							}
@@ -303,7 +303,7 @@ MIT License Applies
 										+ "px"
 							}
 						});
-						addBlockData(block, data[i], series,0);
+						addBlockData(block, data[i], series,0, null);
 						if (data[i].series[j].color) {
 							block.css("background-color", data[i].series[j].color);
 						}
@@ -318,7 +318,7 @@ MIT License Applies
 			}
 		}
 
-		function addBlockData(block, data, series, blockIndex) {
+		function addBlockData(block, data, series, blockIndex, blockId) {
 			// This allows custom attributes to be added to the series data
 			// objects
 			// and makes them available to the 'data' argument of click, resize,
@@ -327,7 +327,8 @@ MIT License Applies
 			var blockData = {
 				id : data.id,
 				name : data.name,
-				blockIndex : blockIndex
+				blockIndex : blockIndex,
+				blockId : blockId
 			};
 			jQuery.extend(blockData, series);
 			block.data("block-data", blockData);
@@ -481,23 +482,33 @@ MIT License Applies
 					var end;
 					
 					if (data[i].series[j].blocks) {
-						start = data[i].series[j].blocks[0].start;
-						end = data[i].series[j].blocks[0].end;
-			
+						for (var z = 0; z < data[i].series[j].blocks.length; z++) {
+							start = data[i].series[j].blocks[z].start;
+							end = data[i].series[j].blocks[z].end;
+							if (i == 0 && j == 0) {
+								minStart = start;
+								maxEnd = end;
+							}
+							if (minStart.compareTo(start) == 1) {
+								minStart = start;
+							}
+							if (maxEnd.compareTo(end) == -1) {
+								maxEnd = end;
+							}
+						}
 					} else {
 						start = Date.parse(data[i].series[j].start);
 						end = Date.parse(data[i].series[j].end);
-					}
-						
-					if (i == 0 && j == 0) {
-						minStart = start;
-						maxEnd = end;
-					}
-					if (minStart.compareTo(start) == 1) {
-						minStart = start;
-					}
-					if (maxEnd.compareTo(end) == -1) {
-						maxEnd = end;
+						if (i == 0 && j == 0) {
+							minStart = start;
+							maxEnd = end;
+						}
+						if (minStart.compareTo(start) == 1) {
+							minStart = start;
+						}
+						if (maxEnd.compareTo(end) == -1) {
+							maxEnd = end;
+						}
 					}
 				}
 			}
